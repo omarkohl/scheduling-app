@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint-watch": "watchexec -c -w app -w db -w utils \"next lint --fix\""
+    "lint-watch": "watchexec -c -w app -w db -w utils \"next lint --fix\"",
+    "test": "npx playwright test && npx playwright show-report"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.28",
@@ -26,6 +27,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.1",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.20",
     "@types/luxon": "^3.6.2",
