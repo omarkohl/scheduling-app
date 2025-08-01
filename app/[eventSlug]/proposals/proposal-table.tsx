@@ -41,6 +41,7 @@ export function ProposalTable({
     return true;
   });
   const totalPages = Math.ceil(filteredProposals.length / ITEMS_PER_PAGE);
+  const votingEnabled = false;
   function updateMyProposals(newValue: boolean) {
     setPage(1);
     setMyProposals(newValue);
@@ -137,17 +138,6 @@ export function ProposalTable({
 
   return (
     <div className="space-y-4">
-      <button
-        className={`text-white px-3 py-2 rounded-md items-center ${
-          myProposals
-            ? "bg-blue-600 hover:bg-blue-700"
-            : "bg-gray-400 hover:bg-gray-500"
-        }`}
-        onClick={() => updateMyProposals(!myProposals)}
-        disabled={!currentUserId}
-      >
-        My proposals
-      </button>
       <div className="relative">
         <input
           type="text"
@@ -157,6 +147,56 @@ export function ProposalTable({
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
+      <button
+        className={`disabled:opacity-50 text-sm text-white px-3 py-2 mr-1 rounded-md items-center ${
+          myProposals
+            ? "bg-blue-600 hover:bg-blue-700"
+            : "bg-gray-400 hover:bg-gray-500"
+        }`}
+        onClick={() => updateMyProposals(!myProposals)}
+        disabled={!currentUserId}
+      >
+        My proposals
+      </button>
+      <div className="relative inline-block group">
+        <button
+          className={`disabled:opacity-50 text-sm text-white px-3 py-2 mr-1 rounded-md items-center bg-gray-400 hover:bg-gray-500`}
+          disabled={!votingEnabled}
+        >
+          Only unvoted
+        </button>
+        {!votingEnabled && (
+          <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+            Voting will be enabled on August 10th
+          </div>
+        )}
+      </div>
+      <div className="relative inline-block group">
+        <button
+          className={`disabled:opacity-50 text-sm text-white px-3 py-2 mr-1 rounded-md items-center bg-gray-400 hover:bg-gray-500`}
+          disabled={!votingEnabled}
+        >
+          Only voted
+        </button>
+        {!votingEnabled && (
+          <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+            Voting will be enabled on August 10th
+          </div>
+        )}
+      </div>
+      <div className="relative inline-block group">
+        <button
+          className={`disabled:opacity-50 text-sm text-white px-3 py-2 mr-1 rounded-md items-center bg-gray-400 hover:bg-gray-500`}
+          disabled={!votingEnabled}
+        >
+          Randomize
+        </button>
+        {!votingEnabled && (
+          <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+            Ordering is already random (Voting will be enabled on August 10th)
+          </div>
+        )}
+      </div>
 
       <div className="overflow-x-auto">
         <table className="table-fixed w-full divide-y divide-gray-200">
@@ -164,31 +204,37 @@ export function ProposalTable({
             <tr>
               <th
                 scope="col"
-                className="w-[20%] truncate text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="w-[15%] truncate text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Title
               </th>
               <th
                 scope="col"
-                className="w-[20%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="w-[15%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Host(s)
               </th>
               <th
                 scope="col"
-                className="w-[40%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="w-[30%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Description
               </th>
               <th
                 scope="col"
-                className="w-[10%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="w-[8%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Duration
               </th>
               <th
                 scope="col"
-                className="w-[10%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="w-[12%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Your votes
+              </th>
+              <th
+                scope="col"
+                className="w-[20%] truncate px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Actions
               </th>
@@ -217,7 +263,7 @@ export function ProposalTable({
                 <td className="truncate px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {proposal.description}
                 </td>
-                <td className="truncate px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     {proposal.durationMinutes && (
                       <>
@@ -229,17 +275,64 @@ export function ProposalTable({
                     )}
                   </div>
                 </td>
-                <td className="truncate px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  {canEdit(proposal.hosts) && (
+                <td>
+                  <div className="relative inline-block group">
+                    <button
+                      type="button"
+                      className="opacity-50 group-hover:opacity-60 ml-1 rounded-md border border-black shadow-sm px-1 py-1 bg-white font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+                    >
+                      ❤️
+                    </button>
+                    <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                      Voting will be enabled on August 10th
+                    </div>
+                  </div>
+                  <div className="relative inline-block group">
+                    <button
+                      type="button"
+                      className="opacity-50 group-hover:opacity-60 ml-1 rounded-md border border-black shadow-sm px-1 py-1 bg-white font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+                    >
+                      ⭐
+                    </button>
+                    <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                      Voting will be enabled on August 10th
+                    </div>
+                  </div>
+                  <div className="relative inline-block group">
+                    <button
+                      type="button"
+                      className="opacity-50 group-hover:opacity-60 ml-1 rounded-md border border-black shadow-sm px-1 py-1 bg-white font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+                    >
+                      👋🏽
+                    </button>
+                    <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                      Voting will be enabled on August 10th
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <Link
+                    href={`/${eventSlug}/proposals/${proposal.id}/edit`}
+                    className={`text-rose-400 hover:text-rose-500 inline-flex items-center text-base
+                      ${canEdit(proposal.hosts) ? "" : "opacity-50 group-hover:opacity-60"}
+                    `}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <PencilIcon className="h-4 w-4 mr-1" />
+                    Edit
+                  </Link>
+                  <div className="relative inline-block group">
                     <Link
-                      href={`/${eventSlug}/proposals/${proposal.id}/edit`}
-                      className="text-rose-400 hover:text-rose-500 inline-flex items-center text-base"
+                      href={""}
+                      className="opacity-50 group-hover:opacity-60 text-rose-400 hover:text-rose-500 inline-flex items-center text-base"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <PencilIcon className="h-4 w-4 mr-1" />
-                      Edit
+                      Schedule
                     </Link>
-                  )}
+                    <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                      Scheduling will be enabled on August 17th
+                    </div>
+                  </div>
                 </td>
               </tr>
             ))}

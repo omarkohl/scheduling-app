@@ -34,7 +34,7 @@ export default async function ProposalsPage({
         <span className="text-gray-500">You are logged in as:</span>
         <UserSelect guests={guests} />
       </div>
-      <div className="flex justify-between items-center mb-8 mt-6">
+      <div className="flex justify-between items-center mb-2 mt-6">
         <div>
           <h1 className="text-3xl font-bold">
             {event.Name}: Session Proposals
@@ -50,6 +50,17 @@ export default async function ProposalsPage({
           <PlusIcon className="h-5 w-5" />
           <span>Add Proposal</span>
         </Link>
+      </div>
+      <div className="relative inline-block mb-2 mt-2 group">
+        <Link
+          href={`/${eventSlug}/proposals/quick-voting`}
+          className="pointer-events-none opacity-50 group-hover:opacity-60 bg-rose-400 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-rose-500"
+        >
+          <span>Go to Quick Voting!</span>
+        </Link>
+        <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+          Voting will be enabled on August 10th
+        </div>
       </div>
 
       {proposals.length === 0 ? (
