@@ -44,7 +44,7 @@ export function ViewProposal(props: {
               Schedule
             </Link>
             <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-              Scheduling will be enabled on August 17th
+              Scheduling is not yet enabled
             </div>
           </div>
         </>
@@ -58,7 +58,7 @@ export function ViewProposal(props: {
             ❤️ Interested
           </button>
           <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-            Voting will be enabled on August 10th
+            Voting is not yet enabled
           </div>
         </div>
         <div className="relative inline-block group">
@@ -69,7 +69,7 @@ export function ViewProposal(props: {
             ⭐ Maybe
           </button>
           <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-            Voting will be enabled on August 10th
+            Voting is not yet enabled
           </div>
         </div>
         <div className="relative inline-block group">
@@ -80,7 +80,7 @@ export function ViewProposal(props: {
             👋🏽 Skip
           </button>
           <div className="absolute bottom-3/4 left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-            Voting will be enabled on August 10th
+            Voting is not yet enabled
           </div>
         </div>
       </p>
