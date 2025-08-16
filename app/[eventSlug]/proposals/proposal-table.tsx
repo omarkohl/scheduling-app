@@ -23,6 +23,10 @@ import {
   dateStartDescription,
 } from "@/app/utils/events";
 import type { Event } from "@/db/events";
+import {
+  getAdjustedDuration,
+  formatDurationShort,
+} from "@/utils/session-breaks";
 
 import { VotingButtons } from "./voting-buttons";
 import { VoteChoice } from "@/app/votes";
@@ -236,12 +240,8 @@ export function ProposalTable({
 
   const formatDuration = (minutes?: number) => {
     if (!minutes) return "";
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m`
-      : `${hours}h`;
+    const adjustedMinutes = getAdjustedDuration(minutes);
+    return formatDurationShort(adjustedMinutes);
   };
 
   const canEdit = (hosts: string[]) => {

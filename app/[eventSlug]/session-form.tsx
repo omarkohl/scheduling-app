@@ -23,6 +23,10 @@ import { UserContext } from "../context";
 import { sessionsOverlap, newEmptySession } from "../session_utils";
 import { parseSessionTime } from "../api/session-form-utils";
 import { eventNameToSlug } from "@/utils/utils";
+import {
+  formatDurationLong,
+  getAdjustedDuration,
+} from "@/utils/session-breaks";
 
 interface ErrorResponse {
   message: string;
@@ -616,32 +620,27 @@ function SelectDuration(props: {
   maxDuration?: number;
 }) {
   const { duration, setDuration, maxDuration } = props;
-  const durations = [
-    { value: 30, label: "30 minutes" },
-    { value: 60, label: "1 hour" },
-    { value: 90, label: "1.5 hours" },
-    { value: 120, label: "2 hours" },
-  ];
+  const durations = [30, 60, 90, 120];
   const availableDurations = maxDuration
-    ? durations.filter(({ value }) => value <= maxDuration)
+    ? durations.filter((value) => value <= maxDuration)
     : durations;
   return (
     <fieldset>
       <div className="space-y-4">
-        {availableDurations.map(({ value, label }) => (
+        {availableDurations.map((value) => (
           <div key={value} className="flex items-center">
             <input
-              id={label}
+              id={`duration-${value}`}
               type="radio"
               checked={value === duration}
               onChange={() => setDuration(value)}
               className="h-4 w-4 border-gray-300 text-rose-400 focus:ring-rose-400"
             />
             <label
-              htmlFor={label}
+              htmlFor={`duration-${value}`}
               className="ml-3 block text-sm font-medium leading-6 text-gray-900"
             >
-              {label}
+              {formatDurationLong(getAdjustedDuration(value))}
             </label>
           </div>
         ))}
