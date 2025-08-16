@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import type { Event } from "@/db/events";
 import type { Guest } from "@/db/guests";
 import type { Session } from "@/db/sessions";
+import { getAdjustedSessionTimes } from "@/utils/session-breaks";
 
 export function ViewSession(props: {
   session: Session;
@@ -23,6 +24,7 @@ export function ViewSession(props: {
     showBackBtn,
     isInModal = false,
   } = props;
+
   return (
     <div
       className={`${isInModal ? "w-full p-6" : "max-w-2xl mx-auto"} pb-12 break-words overflow-hidden`}
@@ -54,7 +56,7 @@ export function ViewSession(props: {
             .setZone("America/Los_Angeles")
             .toFormat("h:mm a")}{" "}
           -{" "}
-          {DateTime.fromISO(session["End time"])
+          {DateTime.fromJSDate(getAdjustedSessionTimes(session).adjustedEndTime)
             .setZone("America/Los_Angeles")
             .toFormat("h:mm a")}
         </span>

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { DateTime } from "luxon";
 import { Session } from "@/db/sessions";
 import { Location } from "@/db/locations";
+import { getAdjustedSessionTimes } from "@/utils/session-breaks";
 
 export function SessionText(props: {
   session: Session;
@@ -9,6 +10,7 @@ export function SessionText(props: {
 }) {
   const { session, locations } = props;
   const formattedHostNames = session["Host name"]?.join(", ") ?? "No hosts";
+  const { adjustedEndTime } = getAdjustedSessionTimes(session);
   return (
     <div className="px-1.5 rounded h-full min-h-10 pt-5 pb-8">
       <h1 className="font-bold leading-tight">{session.Title}</h1>
@@ -21,7 +23,7 @@ export function SessionText(props: {
                 .setZone("America/Los_Angeles")
                 .toFormat("h:mm a")}{" "}
               -{" "}
-              {DateTime.fromISO(session["End time"])
+              {DateTime.fromJSDate(adjustedEndTime)
                 .setZone("America/Los_Angeles")
                 .toFormat("h:mm a")}
             </span>

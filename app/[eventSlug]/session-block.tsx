@@ -15,6 +15,7 @@ import { UserContext, EventContext } from "../context";
 import { sessionsOverlap } from "../session_utils";
 import { useScreenWidth } from "@/utils/hooks";
 import { eventNameToSlug } from "@/utils/utils";
+import { getAdjustedSessionTimes } from "@/utils/session-breaks";
 
 export function SessionBlock(props: {
   eventName: string;
@@ -177,35 +178,38 @@ export function RealSessionCard(props: {
     "Num RSVPs"
   ];
 
-  const SessionInfoDisplay = () => (
-    <>
-      <h1 className="text-lg font-bold leading-tight">{session.Title}</h1>
-      <p className="text-xs text-gray-500 mb-2 mt-1">
-        Hosted by {formattedHostNames}
-      </p>
-      <p className="text-sm whitespace-pre-line">{session.Description}</p>
-      <div className="flex justify-between mt-2 gap-4 text-xs text-gray-500">
-        <div className="flex gap-1">
-          <UserIcon className="h-4 w-4" />
-          <span>
-            {numRSVPs} RSVPs (max capacity {session.Capacity})
-          </span>
+  const SessionInfoDisplay = () => {
+    const { adjustedEndTime } = getAdjustedSessionTimes(session);
+    return (
+      <>
+        <h1 className="text-lg font-bold leading-tight">{session.Title}</h1>
+        <p className="text-xs text-gray-500 mb-2 mt-1">
+          Hosted by {formattedHostNames}
+        </p>
+        <p className="text-sm whitespace-pre-line">{session.Description}</p>
+        <div className="flex justify-between mt-2 gap-4 text-xs text-gray-500">
+          <div className="flex gap-1">
+            <UserIcon className="h-4 w-4" />
+            <span>
+              {numRSVPs} RSVPs (max capacity {session.Capacity})
+            </span>
+          </div>
+          <div className="flex gap-1">
+            <ClockIcon className="h-4 w-4" />
+            <span>
+              {DateTime.fromISO(session["Start time"])
+                .setZone("America/Los_Angeles")
+                .toFormat("h:mm a")}{" "}
+              -{" "}
+              {DateTime.fromJSDate(adjustedEndTime)
+                .setZone("America/Los_Angeles")
+                .toFormat("h:mm a")}
+            </span>
+          </div>
         </div>
-        <div className="flex gap-1">
-          <ClockIcon className="h-4 w-4" />
-          <span>
-            {DateTime.fromISO(session["Start time"])
-              .setZone("America/Los_Angeles")
-              .toFormat("h:mm a")}{" "}
-            -{" "}
-            {DateTime.fromISO(session["End time"])
-              .setZone("America/Los_Angeles")
-              .toFormat("h:mm a")}
-          </span>
-        </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  };
   return (
     <Tooltip
       content={onMobile ? undefined : <SessionInfoDisplay />}
